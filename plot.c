@@ -18,7 +18,7 @@
 double SIZE_CONSTANT = 10;
 
 double function(double x) {
-	double res = x;
+	double res = cos(2*x) + x*x;
 	return res;
 }
 
