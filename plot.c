@@ -9,16 +9,16 @@
 #define RADIUS 1
 
 #define AXES_THICKNESS 3
+#define AXES_SIZE_CONSTANT 5
 
 #define CAMERA_VELOCITY 15
-#define CONSTANT_E pow((1 + 1/1e7), 1e7)
 
 #define STEP 0.005
 
 double SIZE_CONSTANT = 10;
 
 double function(double x) {
-	double res = cos(2*x) + x*x;
+	double res = pow(M_E, -x) * sin(6*x);
 	return res;
 }
 
@@ -29,31 +29,30 @@ void draw_axes() {
 	Color grid_color = {130, 130, 130, 100};
 
 	for (int i = 0; i < number_dashes; i++) {
-		
 		// grid
 		
-		Vector2 start_grid = {(WIDTH / 2) + k + 1/STEP, -5*HEIGHT};
-		Vector2 end_grid = {(WIDTH / 2) + k + 1/STEP, 5*HEIGHT};
+		Vector2 start_grid = {(WIDTH / 2) + k + 1/STEP, -AXES_SIZE_CONSTANT*HEIGHT};
+		Vector2 end_grid = {(WIDTH / 2) + k + 1/STEP, AXES_SIZE_CONSTANT*HEIGHT};
 		
 		DrawLineEx(start_grid, end_grid, AXES_THICKNESS >= 2 ? AXES_THICKNESS - 1 : 1, grid_color); // principal right grid
 		
-		//start_grid = (Vector2) {(WIDTH / 2) + k/2 + (1/(2*STEP)), -5*HEIGHT};
-		//end_grid = (Vector2 ){(WIDTH / 2) + k/2 + (1/(2*STEP)), 5*HEIGHT};
+		//start_grid = (Vector2) {(WIDTH / 2) + k/2, -AXES_SIZE_CONSTANT*HEIGHT};
+		//end_grid = (Vector2 ){(WIDTH / 2) + k/2, AXES_SIZE_CONSTANT*HEIGHT};
 		
-		//DrawLineEx(start_grid, end_grid, AXES_THICKNESS, LIGHTGRAY); // secondary right grid
+		//DrawLineEx(start_grid, end_grid, AXES_THICKNESS, LIGHTGRAY); // failed attempt to do secondary right grid
 
-		start_grid = (Vector2) {(WIDTH / 2) - k, -5*HEIGHT};
-		end_grid = (Vector2) {(WIDTH / 2) - k, 5*HEIGHT};
+		start_grid = (Vector2) {(WIDTH / 2) - k, -AXES_SIZE_CONSTANT*HEIGHT};
+		end_grid = (Vector2) {(WIDTH / 2) - k, AXES_SIZE_CONSTANT*HEIGHT};
 
 		DrawLineEx(start_grid, end_grid, AXES_THICKNESS >= 2 ? AXES_THICKNESS - 1 : 1, grid_color); // principal left grid
 
-		start_grid = (Vector2) {-5*WIDTH, (HEIGHT / 2) - k};
-		end_grid = (Vector2) {5*WIDTH, (HEIGHT / 2) - k};
+		start_grid = (Vector2) {-AXES_SIZE_CONSTANT*WIDTH, (HEIGHT / 2) - k};
+		end_grid = (Vector2) {AXES_SIZE_CONSTANT*WIDTH, (HEIGHT / 2) - k};
 
 		DrawLineEx(start_grid, end_grid, AXES_THICKNESS >= 2 ? AXES_THICKNESS - 1 : 1, grid_color); // principal up grid
 
-		start_grid = (Vector2) {-5*WIDTH, (HEIGHT / 2) + k};
-		end_grid = (Vector2) {5*WIDTH, (HEIGHT / 2) + k};
+		start_grid = (Vector2) {-AXES_SIZE_CONSTANT*WIDTH, (HEIGHT / 2) + k};
+		end_grid = (Vector2) {AXES_SIZE_CONSTANT*WIDTH, (HEIGHT / 2) + k};
 
 		DrawLineEx(start_grid, end_grid, AXES_THICKNESS >= 2 ? AXES_THICKNESS - 1 : 1, grid_color); // principal down grid
 		
@@ -63,7 +62,6 @@ void draw_axes() {
 		Vector2 end = {(WIDTH / 2) + k, (HEIGHT / 2) + 10};
 
 		DrawLineEx(start, end, AXES_THICKNESS, WHITE); // right dashes
-		
 
 		start.x = (WIDTH / 2) - k;
 		end.x = (WIDTH / 2) - k;
@@ -80,19 +78,17 @@ void draw_axes() {
 
 		DrawLineEx(start, end, AXES_THICKNESS, WHITE); // down dashes
 		
-		
-		
 		k += 1 / STEP;
 	}
 
-	Vector2 start_x = {-5 * WIDTH, HEIGHT / 2};
-	Vector2 end_x = {5 * WIDTH, HEIGHT / 2};
+	Vector2 start_x = {-AXES_SIZE_CONSTANT * WIDTH, HEIGHT / 2};
+	Vector2 end_x = {AXES_SIZE_CONSTANT * WIDTH, HEIGHT / 2};
 
-	Vector2 start_y = {WIDTH / 2, -5*HEIGHT};
-	Vector2 end_y = {WIDTH/2, 5*HEIGHT};
+	Vector2 start_y = {WIDTH / 2, -AXES_SIZE_CONSTANT * HEIGHT};
+	Vector2 end_y = {WIDTH/2, AXES_SIZE_CONSTANT * HEIGHT};
 	
-	DrawLineEx(start_x, end_x, AXES_THICKNESS, WHITE);
-	DrawLineEx(start_y, end_y, AXES_THICKNESS, WHITE);
+	DrawLineEx(start_x, end_x, AXES_THICKNESS, WHITE); // X AXIS
+	DrawLineEx(start_y, end_y, AXES_THICKNESS, WHITE); // Y AXIS
 }
 
 void populate(double start, double step, double end, double* image, int size) {
@@ -107,11 +103,11 @@ void populate(double start, double step, double end, double* image, int size) {
 
 }
 
-void plot_points(double* image, long size, Vector2* middle) {
+void plot_points(double* image, long size, Vector2* middle, Color color) {
 	double k = -size/2;
 	for (long i = 0; i < size; i++) {
-		// DrawCircle(middle->x + k, (HEIGHT - image[i] * 30) - middle->y, RADIUS, RAYWHITE);
-		DrawPixel(middle->x + k, (HEIGHT - image[i] * (1/STEP)) - middle->y, RAYWHITE);
+		//DrawCircle(middle->x + k, (HEIGHT - image[i] * (1/STEP)) - middle->y, RADIUS, color); // much slower
+		DrawPixel(middle->x + k, (HEIGHT - image[i] * (1/STEP)) - middle->y, color);
 		k += 1;
 	}
 
@@ -171,9 +167,10 @@ int main(void) {
 
 		BeginDrawing();
 			ClearBackground(BLACK);
+			
 			BeginMode2D(camera);
 				draw_axes();
-				plot_points(image, number_points, &middle);
+				plot_points(image, number_points, &middle, PURPLE);
 			EndMode2D();
 			
 			add_informations();
