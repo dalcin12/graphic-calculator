@@ -23,22 +23,47 @@ double function(double x) {
 }
 
 void draw_axes() {
-	Vector2 start_x = {-5 * WIDTH, HEIGHT / 2};
-	Vector2 end_x = {5 * WIDTH, HEIGHT / 2};
-
-	Vector2 start_y = {WIDTH / 2, -5*HEIGHT};
-	Vector2 end_y = {WIDTH/2, 5*HEIGHT};
-	
-	DrawLineEx(start_x, end_x, AXES_THICKNESS, WHITE);
-	DrawLineEx(start_y, end_y, AXES_THICKNESS, WHITE);
-
 	int number_dashes = 20;
 	int k = 0;
+
+	Color grid_color = {130, 130, 130, 100};
+
 	for (int i = 0; i < number_dashes; i++) {
+		
+		// grid
+		
+		Vector2 start_grid = {(WIDTH / 2) + k + 1/STEP, -5*HEIGHT};
+		Vector2 end_grid = {(WIDTH / 2) + k + 1/STEP, 5*HEIGHT};
+		
+		DrawLineEx(start_grid, end_grid, AXES_THICKNESS >= 2 ? AXES_THICKNESS - 1 : 1, grid_color); // principal right grid
+		
+		//start_grid = (Vector2) {(WIDTH / 2) + k/2 + (1/(2*STEP)), -5*HEIGHT};
+		//end_grid = (Vector2 ){(WIDTH / 2) + k/2 + (1/(2*STEP)), 5*HEIGHT};
+		
+		//DrawLineEx(start_grid, end_grid, AXES_THICKNESS, LIGHTGRAY); // secondary right grid
+
+		start_grid = (Vector2) {(WIDTH / 2) - k, -5*HEIGHT};
+		end_grid = (Vector2) {(WIDTH / 2) - k, 5*HEIGHT};
+
+		DrawLineEx(start_grid, end_grid, AXES_THICKNESS >= 2 ? AXES_THICKNESS - 1 : 1, grid_color); // principal left grid
+
+		start_grid = (Vector2) {-5*WIDTH, (HEIGHT / 2) - k};
+		end_grid = (Vector2) {5*WIDTH, (HEIGHT / 2) - k};
+
+		DrawLineEx(start_grid, end_grid, AXES_THICKNESS >= 2 ? AXES_THICKNESS - 1 : 1, grid_color); // principal up grid
+
+		start_grid = (Vector2) {-5*WIDTH, (HEIGHT / 2) + k};
+		end_grid = (Vector2) {5*WIDTH, (HEIGHT / 2) + k};
+
+		DrawLineEx(start_grid, end_grid, AXES_THICKNESS >= 2 ? AXES_THICKNESS - 1 : 1, grid_color); // principal down grid
+		
+		// dashes
+		
 		Vector2 start = {(WIDTH / 2) + k, (HEIGHT / 2) - 10};
 		Vector2 end = {(WIDTH / 2) + k, (HEIGHT / 2) + 10};
 
 		DrawLineEx(start, end, AXES_THICKNESS, WHITE); // right dashes
+		
 
 		start.x = (WIDTH / 2) - k;
 		end.x = (WIDTH / 2) - k;
@@ -54,9 +79,20 @@ void draw_axes() {
 		end.y = (HEIGHT / 2) + k;
 
 		DrawLineEx(start, end, AXES_THICKNESS, WHITE); // down dashes
-
+		
+		
+		
 		k += 1 / STEP;
 	}
+
+	Vector2 start_x = {-5 * WIDTH, HEIGHT / 2};
+	Vector2 end_x = {5 * WIDTH, HEIGHT / 2};
+
+	Vector2 start_y = {WIDTH / 2, -5*HEIGHT};
+	Vector2 end_y = {WIDTH/2, 5*HEIGHT};
+	
+	DrawLineEx(start_x, end_x, AXES_THICKNESS, WHITE);
+	DrawLineEx(start_y, end_y, AXES_THICKNESS, WHITE);
 }
 
 void populate(double start, double step, double end, double* image, int size) {
