@@ -18,7 +18,7 @@
 double SIZE_CONSTANT = 10;
 
 double function(double x) {
-	double res = pow(x, 2) -5*x + 6;
+	double res = x;
 	return res;
 }
 
@@ -118,8 +118,8 @@ int main(void) {
 		
 		if (camera.zoom > 4.0f) {
 			camera.zoom = 4.0f;
-		} else if (camera.zoom < 0.1f) {
-			camera.zoom = 0.1f;
+		} else if (camera.zoom < 0.6f) {
+			camera.zoom = 0.6f;
 		}
 
 		if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) 	camera.offset.x += CAMERA_VELOCITY;
