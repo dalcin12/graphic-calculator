@@ -1,6 +1,6 @@
 # Graphic Calculator in C
 
-This is a basic Graphic Calculator in C. Still in tests.
+This is a basic Graphic Calculator in C. Still in tests. Made with Raylib.
 
 To set the function, you need to change it in the code. Implementing a better way to do it soon.
 
