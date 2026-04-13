@@ -20,3 +20,4 @@ Finally, execute the program using <code>./plot</code>.
 <code>gcc -o plot plot.c -I include -L lib -lraylib -lgdi32 -lwinmm</code>
 
 To run, use <code>./plot</code>.
+
